@@ -80,9 +80,11 @@ namespace EateryDuwamish
                 LinkButton lbDishName = (LinkButton)e.Item.FindControl("lbDishName");
                 Literal litDishType = (Literal)e.Item.FindControl("litDishType");
                 Literal litPrice = (Literal)e.Item.FindControl("litPrice");
+                LinkButton lbToggleRecipe = (LinkButton)e.Item.FindControl("lbToggleRecipe");
 
                 lbDishName.Text = dish.DishName;
                 lbDishName.CommandArgument = dish.DishID.ToString();
+                lbToggleRecipe.CommandArgument = dish.DishID.ToString();
 
                 DishTypeData DishType = new DishTypeSystem().GetDishTypeByID(dish.DishTypeID);
                 litDishType.Text = DishType.DishTypeName;
@@ -112,6 +114,11 @@ namespace EateryDuwamish
                 litFormType.Text = $"UBAH: {lbDishName.Text}";
                 pnlFormDish.Visible = true;
                 txtDishName.Focus();
+            }
+            if (e.CommandName == "SEERECIPE")
+            {
+                int dishID = Convert.ToInt32(e.CommandArgument.ToString());
+                Response.Redirect("Recipe.aspx?dishid=" + dishID);
             }
         }
         #endregion
@@ -144,7 +151,10 @@ namespace EateryDuwamish
         {
             try
             {
+                
                 string strDeletedIDs = hdfDeletedDishes.Value;
+                if (string.IsNullOrEmpty(strDeletedIDs))
+                    throw new Exception("No Data Selected");
                 IEnumerable<int> deletedIDs = strDeletedIDs.Split(',').Select(Int32.Parse);
                 int rowAffected = new DishSystem().DeleteDishes(deletedIDs);
                 if (rowAffected <= 0)

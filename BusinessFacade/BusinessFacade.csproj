@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IngredientSystem.cs" />
+    <Compile Include="RecipeSystem.cs" />
     <Compile Include="DishSystem.cs" />
     <Compile Include="DishTypeSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

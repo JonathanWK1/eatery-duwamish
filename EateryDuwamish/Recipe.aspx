@@ -1,16 +1,16 @@
-﻿<%@ Page Title="Dish" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Dish.aspx.cs" Inherits="EateryDuwamish.Dish" %>
+﻿<%@ Page Title="Recipe" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Recipe.aspx.cs" Inherits="EateryDuwamish.Recipe" %>
 <%@ Register Src="~/UserControl/NotificationControl.ascx" TagName="NotificationControl" TagPrefix="uc1" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="Head" runat="server">
     <%--Datatable Configuration--%>
     <script type="text/javascript">
         function ConfigureDatatable() {
             var table = null;
-            if ($.fn.dataTable.isDataTable('#htblDish')) {
-                table = $('#htblDish').DataTable();
+            if ($.fn.dataTable.isDataTable('#htblRecipe')) {
+                table = $('#htblRecipe').DataTable();
             }
             else {
                 
-                table = $('#htblDish').DataTable({
+                table = $('#htblRecipe').DataTable({
                     stateSave: false,
                     order: [[1, "asc"]],
                     columnDefs: [{ orderable: false, targets: [0] }]
@@ -26,21 +26,20 @@
                 var parent = $(this).parent();
                 var value = $(parent).attr('data-value');
                 var deletedList = [];
-
-                if ($('#<%=hdfDeletedDishes.ClientID%>').val())
-                    deletedList = $('#<%=hdfDeletedDishes.ClientID%>').val().split(',');
+                
+                if ($('#<%=hdfDeletedRecipes.ClientID%>').val())
+                    deletedList = $('#<%=hdfDeletedRecipes.ClientID%>').val().split(',');
 
                 if ($(this).is(':checked')) {
                     deletedList.push(value);
-                    $('#<%=hdfDeletedDishes.ClientID%>').val(deletedList.join(','));
+                    $('#<%=hdfDeletedRecipes.ClientID%>').val(deletedList.join(','));
                 }
                 else {
                     var index = deletedList.indexOf(value);
                     if (index >= 0)
                         deletedList.splice(index, 1);
-                    $('#<%=hdfDeletedDishes.ClientID%>').val(deletedList.join(','));
+                    $('#<%=hdfDeletedRecipes.ClientID%>').val(deletedList.join(','));
                 }
-                alert(deletedlist)
             });
         }
     </script>
@@ -65,96 +64,62 @@
                     ConfigureElements();
                 });
             </script>
-            <uc1:NotificationControl ID="notifDish" runat="server" />
-            <div class="page-title">Master Dish</div><hr style="margin:0"/>
-            <%--FORM DISH--%>
-            <asp:Panel runat="server" ID="pnlFormDish" Visible="false">
+            <uc1:NotificationControl ID="notifRecipe" runat="server" />
+            <div class="page-title">Master Recipe</div><hr style="margin:0"/>
+            <%--FORM RECIPE--%>
+            <asp:Panel runat="server" ID="pnlFormRecipe" Visible="false">
                 <div class="form-slip">
                     <div class="form-slip-header">
                         <div class="form-slip-title">
-                            FORM DISH - 
+                            FORM RECIPE - 
                             <asp:Literal runat="server" ID="litFormType"></asp:Literal>
+                            
                         </div>
                         <hr style="margin:0"/>
                     </div>
                     <div class="form-slip-main">
-                        <asp:HiddenField ID="hdfDishId" runat="server" Value="0"/>
+                        <asp:HiddenField ID="hdfRecipeId" runat="server" Value="0"/>
                         <div>
-                            <%--Dish Name Field--%>
+                            <%--Recipe Name Field--%>
                             <div class="col-lg-6 form-group">
                                 <div class="col-lg-4 control-label">
-                                    Dish Name*
+                                    Recipe Name*
                                 </div>
                                 <div class="col-lg-6">
-                                    <asp:TextBox ID="txtDishName" CssClass="form-control" runat="server"></asp:TextBox>
+                                    <asp:TextBox ID="txtRecipeName" CssClass="form-control" runat="server"></asp:TextBox>
                                     <%--Validator--%>
-                                    <asp:RequiredFieldValidator ID="rfvDishName" runat="server" ErrorMessage="Please fill this field"
-                                        ControlToValidate="txtDishName" ForeColor="Red" 
-                                        ValidationGroup="InsertUpdateDish" Display="Dynamic">
+                                    <asp:RequiredFieldValidator ID="rfvRecipeName" runat="server" ErrorMessage="Please fill this field"
+                                        ControlToValidate="txtRecipeName" ForeColor="Red" 
+                                        ValidationGroup="InsertUpdateRecipe" Display="Dynamic">
                                     </asp:RequiredFieldValidator>
-                                    <asp:RegularExpressionValidator ID="revDishName" runat="server" ErrorMessage="This field has a maximum of 100 characters"
-                                        ControlToValidate="txtDishName" ValidationExpression="^[\s\S]{0,100}$" ForeColor="Red"
-                                        ValidationGroup="InsertUpdateDish" Display="Dynamic">
+                                    <asp:RegularExpressionValidator ID="revRecipeName" runat="server" ErrorMessage="This field has a maximum of 200 characters"
+                                        ControlToValidate="txtRecipeName" ValidationExpression="^[\s\S]{0,200}$" ForeColor="Red"
+                                        ValidationGroup="InsertUpdateRecipe" Display="Dynamic">
                                     </asp:RegularExpressionValidator>
                                     <%--End of Validator--%>
                                 </div>
                             </div>
-                            <%--End of Dish Name Field--%>
-                            <%--Dish Type Field--%>
-                            <div class="col-lg-6 form-group">
-                                <div class="col-lg-4 control-label">
-                                    Dish Type*
-                                </div>
-                                <div class="col-lg-6">
-                                    <asp:DropDownList ID="ddlDishType" CssClass="form-control" runat="server"></asp:DropDownList>
-                                    <%--Validator--%>
-                                    <asp:RequiredFieldValidator ID="rfvDishType" runat="server" ErrorMessage="Please fill this field"
-                                        ControlToValidate="ddlDishType" ForeColor="Red" InitialValue="0"
-                                        ValidationGroup="InsertUpdateDish" Display="Dynamic">
-                                    </asp:RequiredFieldValidator>
-                                    <%--End of Validator--%>
-                                </div>
-                            </div>
-                            <%--End of Dish Type Field--%>
-                            <%--Dish Price Field--%>
-                            <div class="col-lg-6 form-group">
-                                <div class="col-lg-4 control-label">
-                                    Price*
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="input-price">
-                                        <div class="price-prefix">Rp. </div>
-                                        <asp:TextBox ID="txtPrice" CssClass="form-control" runat="server" type="number"
-                                             Min="0" Max="999999999"></asp:TextBox>
-                                    </div>
-                                    <%--Validator--%>
-                                    <asp:RequiredFieldValidator ID="rfvPrive" runat="server" ErrorMessage="Please fill this field"
-                                        ControlToValidate="txtPrice" ForeColor="Red"
-                                        ValidationGroup="InsertUpdateDish" Display="Dynamic">
-                                    </asp:RequiredFieldValidator>
-                                    <%--End of Validator--%>
-                                </div>
-                            </div>
-                            <%--End of Dish Type Field--%>
+                            <%--End of Recipe Name Field--%>
+                          
                         </div>
                         <div class="col-lg-12">
                             <div class="col-lg-2">
                             </div>
                             <div class="col-lg-2">
                                 <asp:Button runat="server" ID="btnSave" CssClass="btn btn-primary" Width="100px"
-                                    Text="SAVE" OnClick="btnSave_Click" ValidationGroup="InsertUpdateDish">
+                                    Text="SAVE" OnClick="btnSave_Click" ValidationGroup="InsertUpdateRecipe">
                                 </asp:Button>
                             </div>
                         </div>
                     </div>
                 </div>
             </asp:Panel>
-            <%--END OF FORM DISH--%>
+            <%--END OF FORM RECIPE--%>
 
             <div class="row">
                 <div class="table-header">
                     <div class="table-header-title">
-                        DISHES
+                        Recipes
                     </div>
                     <div class="table-header-button">
                         <asp:Button ID="btnAdd" runat="server" Text="ADD" CssClass="btn btn-primary" Width="100px"
@@ -166,10 +131,10 @@
             </div>
             <div class="row">
                 <div class="table-main col-sm-12">
-                    <asp:HiddenField ID="hdfDeletedDishes" runat="server" />
-                    <asp:Repeater ID="rptDish" runat="server" OnItemDataBound="rptDish_ItemDataBound" OnItemCommand="rptDish_ItemCommand">
+                    <asp:HiddenField ID="hdfDeletedRecipes" runat="server" />
+                    <asp:Repeater ID="rptRecipe" runat="server" OnItemDataBound="rptRecipe_ItemDataBound" OnItemCommand="rptRecipe_ItemCommand">
                         <HeaderTemplate>
-                            <table id="htblDish" class="table">
+                            <table id="htblRecipe" class="table">
                                 <thead>
                                     <tr role="row">
                                         <th aria-sort="ascending" style="" colspan="1" rowspan="1"
@@ -178,15 +143,7 @@
                                         </th>
                                         <th aria-sort="ascending" style="" colspan="1" rowspan="1" tabindex="0"
                                             class="sorting_asc text-center">
-                                            Dish Name
-                                        </th>
-                                        <th aria-sort="ascending" style="" colspan="1" rowspan="1" tabindex="0"
-                                            class="sorting_asc text-center">
-                                            Dish Type
-                                        </th>
-                                        <th aria-sort="ascending" style="" colspan="1" rowspan="1" tabindex="0"
-                                            class="sorting_asc text-center">
-                                            Price
+                                            Recipe Name
                                         </th>
                                         <th aria-sort="ascending" style="" colspan="1" rowspan="1" tabindex="0"
                                             class="sorting_asc text-center">
@@ -200,22 +157,16 @@
                         <ItemTemplate>
                             <tr class="odd" role="row" runat="server" onclick="">
                                 <td>
-                                    <div style="text-align: center;">
+                                    <div style="text-align: center">
                                         <asp:CheckBox ID="chkChoose" CssClass="checkDelete" runat="server">
                                         </asp:CheckBox>
                                     </div>
                                 </td>
                                 <td>
-                                    <asp:LinkButton ID="lbDishName" runat="server" CommandName="EDIT"></asp:LinkButton>
+                                    <asp:LinkButton ID="lbRecipeName" runat="server" CommandName="EDIT"></asp:LinkButton>
                                 </td>
                                 <td>
-                                    <asp:Literal ID="litDishType" runat="server"></asp:Literal>
-                                </td>
-                                <td>
-                                    <asp:Literal ID="litPrice" runat="server"></asp:Literal>
-                                </td>
-                                <td>
-                                    <asp:LinkButton ID="lbToggleRecipe" runat="server" CommandName="SEERECIPE">recipe</asp:LinkButton>
+                                    <asp:LinkButton ID="lbRecipeDetail" runat="server" CommandName="DETAIL">detail</asp:LinkButton>
                                 </td>
                             </tr>
                         </ItemTemplate>
